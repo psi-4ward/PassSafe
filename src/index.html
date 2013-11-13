@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title>PassSafe Demo</title>
+
+		<!--[if lt IE 9]><script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script><script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script><![endif]-->
+		<script src="//code.jquery.com/jquery.js"></script>
+		<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular.min.js"></script>
+		<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css" rel="stylesheet">
+		<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>
+
+		<style>
+			[ng\:cloak], [ng-cloak], [data-ng-cloak], .ng-cloak {
+				display: none !important;
+			}
+			table {
+				table-layout: fixed;
+			}
+			table tr>*:last-child {
+				width: 65px;
+			}
+			.ng-invalid:not(.ng-pristine) {
+				border-color: #b94a48;
+				-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+				box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+			}
+			.ng-invalid:focus {
+				border-color: #953b39;
+				-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
+				box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="container ng-cloak" ng-controller="PassSafeCtrl" ng-app="PassSafe" id="PassSafe">
+
+			<div class="" style="margin-top: 15px;">
+				<h1>PassSafe</h1>
+			</div>
+
+			<div class="well" ng-show="!decrypted && !createNew" ng-submit="decrypt()" >
+				<form role="form" name="decryptFrm">
+					<div class="form-group">
+						<label for="pwd">Password</label>
+						<input type="password" placeholder="Password" class="form-control" id="pwd" ng-model="passwd" required>
+						<span class="label label-danger" ng-if="decrypt_error">{{decrypt_error}}</span>
+					</div>
+					<div class="form-group">
+						<button type="submit" class="btn btn-lg btn-primary" ng-disabled="decryptFrm.$invalid">Decrypt</button>
+					</div>
+				</form>
+			</div>
+
+			<div class="well" ng-show="!decrypted && createNew" ng-submit="create()">
+				<form role="form" name="createFrm">
+					<div class="form-group">
+						<label for="npwd" style="display: block">Password</label>
+						<input type="password" placeholder="Password" class="form-control" id="npwd" ng-model="passwd" required style="width: 49%; display: inline-block">
+						<input type="password" placeholder="retype Password" class="form-control" ng-model="passwd2" required password-match="passwd" style="width: 49%; display: inline-block">
+					</div>
+					<div class="form-group">
+						<button type="submit" class="btn btn-lg btn-success" ng-disabled="createFrm.$invalid">Create</button>
+					</div>
+				</form>
+			</div>
+
+
+			<div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<form role="form" name="pwdChFrm">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+								<h4 class="modal-title">Change Password</h4>
+							</div>
+							<div class="modal-body">
+
+								<div class="form-group">
+									<label for="oldpwd" style="display: block">Old Password</label>
+									<input type="password" placeholder="Password" class="form-control" id="oldpwd" ng-model="oldPass" ui-validate="'passwd == $value'" required style="width: 49%; display: inline-block">
+								</div>
+								<div class="form-group">
+									<label for="newpwd" style="display: block">New Password</label>
+									<input type="password" placeholder="Password" class="form-control" id="newpwd" ng-model="newPasswd" required style="width: 49%; display: inline-block">
+									<input type="password" placeholder="retype Password" class="form-control" ng-model="newPasswd2" required password-match="newPasswd" style="width: 49%; display: inline-block">
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button class="btn btn-primary" ng-click="changePassword()" ng-disabled="pwdChFrm.$invalid">OK</button>
+								<button class="btn btn-warning" data-dismiss="modal">Cancel</button>
+							</div>
+						</form>
+					</div> <!-- /.modal-content -->
+				</div> <!-- /.modal-dialog -->
+			</div> <!-- /.modal -->
+
+
+			<div class="table-responsive" ng-if="decrypted">
+
+				<p>
+					<button type="button" class="btn btn-primary pull-right" title="Save changes (Alt-s)" ng-click="save()" accesskey="s">
+						<span class="glyphicon glyphicon-save"></span> Save
+					</button>
+
+					<button type="button" class="btn pull-right" title="Change password" data-toggle="modal" data-target="#changePasswordModal" style="margin-right: 5px;">
+						<span class="glyphicon glyphicon-cog"></span> ChPwd
+					</button>
+
+					<input type="search" placeholder="filter" ng-model="filter" class="form-control input-sm" style="width: 70%" accesskey="f" title="Search the password list">
+				</p>
+
+
+				<table class="table table-condensed table-striped table-bordered table-hover">
+				<thead>
+					<tr>
+						<th>Notes</th>
+						<th>User</th>
+						<th>Pass</th>
+						<th>
+							<button type="button" class="btn btn-success btn-xs" title="Add (Alt-a)" ng-click="add()" accesskey="a">
+								<span class="glyphicon glyphicon-plus-sign"></span>
+							</button>
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="item in passwordList | filter:filter" ng-controller="PasswordCtrl" ng-init="item=item">
+						<td>
+							<div ng-show="!editing">{{item.note}}</div>
+							<input type="text" class="form-control input-sm" ng-model="item.note" ng-show="editing" ng-keydown="endEditOnEnter($event)">
+						</td>
+						<td>
+							<input type="text" class="form-control input-sm" ng-model="item.user" ng-disabled="!editing" ng-keydown="endEditOnEnter($event)">
+						</td>
+						<td>
+							<input type="text" class="form-control input-sm pass" ng-model="item.pass" ng-disabled="!editing" ng-keydown="endEditOnEnter($event)">
+						<td>
+							<button type="button" class="btn btn-primary btn-xs" title="Edit" ng-click="toggleEditing()">
+								<span class="glyphicon glyphicon-edit"></span>
+							</button>
+							<button type="button" class="btn btn-warning btn-xs" title="Delete" ng-click="remove()">
+								<span class="glyphicon glyphicon-remove"></span>
+							</button>
+						</td>
+						</form>
+					</tr>
+				</tbody>
+			</table>
+			</div>
+
+		</div>
+
+
+		<!--(if target dev)><!-->
+		<script src="PassSafe.js"></script>
+		<!--<!(endif)-->
+		<!--(if target !(dev))><!-->
+		<script src="PassSafe.min.js"></script>
+		<!--<!(endif)-->
+
+		<script src="adapter/localstorage.js"></script>
+	</body>
+</html>
