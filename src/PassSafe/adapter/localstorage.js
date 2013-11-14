@@ -9,7 +9,7 @@ if(!supports_html5_storage()) {
 
 
 // configure saver() and loader() for PasswordsProvider
-angular.module('PassSafe').config(function(PasswordsProvider) {
+angular.module('PassSafe').config(['PasswordsProvider', function(PasswordsProvider) {
 
   // fetch the ciphertext from the div
   PasswordsProvider.setLoader(function() {
@@ -21,4 +21,4 @@ angular.module('PassSafe').config(function(PasswordsProvider) {
     localStorage.setItem("PassSafe", ciphertext);
     alert('Ciphertext was saved to your localStorage');
   });
-});
+}]);

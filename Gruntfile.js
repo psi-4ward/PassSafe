@@ -70,7 +70,7 @@ module.exports = function(grunt) {
     watch: {
       scripts: {
         files: ['src/**/*.js', 'src/**/*.html'],
-        tasks: ['browserify', 'copy', 'targethtml'],
+        tasks: ['browserify', 'concat:localstorage', 'targethtml:dev'],
         options: {
           spawn: false
         }

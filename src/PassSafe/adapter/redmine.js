@@ -14,7 +14,7 @@ jQuery(function() {
 });
 
 // configure saver() and loader() for PasswordsProvider
-angular.module('PassSafe').config(function(PasswordsProvider) {
+angular.module('PassSafe').config(['PasswordsProvider', function(PasswordsProvider) {
 
   // fetch the ciphertext from the div
   PasswordsProvider.setLoader(function() {
@@ -46,4 +46,4 @@ angular.module('PassSafe').config(function(PasswordsProvider) {
         console.log('ERR', arguments);
       });
   });
-});
+}]);
