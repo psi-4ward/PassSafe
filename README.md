@@ -18,7 +18,7 @@ Available adapters:
 
 
 ## Notes
-Crypt algorithmus: https://keybase.io/triplesec
+Crypt algorithmus: http://bitwiseshiftleft.github.io/sjcl/
 
 License: http://www.gnu.org/licenses/lgpl-3.0.html LGPL <br>
 Author: [4ward.media](http://www.4wardmedia.de)

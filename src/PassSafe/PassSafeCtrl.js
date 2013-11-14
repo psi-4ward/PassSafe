@@ -12,16 +12,13 @@ angular.module('PassSafe').controller('PassSafeCtrl', ['$scope', 'Passwords', '$
   };
 
   $scope.decrypt = function() {
-    Passwords.load($scope.passwd)
-      .then(
-      function(data) {
-        $scope.passwordList = data;
-        $scope.decrypt_error = false;
-        $scope.decrypted = true;
-      },
-      function(err) {
-        $scope.decrypt_error = err.message;
-      });
+    try {
+      $scope.passwordList = Passwords.load($scope.passwd);
+      $scope.decrypt_error = false;
+      $scope.decrypted = true;
+    } catch(err) {
+      $scope.decrypt_error = err.message + '. Probably you typed a wrong password.';
+    }
   };
 
   $scope.add = function() {

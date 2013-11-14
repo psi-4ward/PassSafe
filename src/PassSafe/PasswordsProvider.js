@@ -1,3 +1,13 @@
+window.sjcl = require('../vendor/sjcl.js');
+
+// atob() and btoa() polyfill
+var base64 = require('../vendor/base64.js');
+if(typeof window.atob !== 'function') {
+  window.atob = base64.atob;
+  window.btoa = base64.btoa;
+}
+
+
 angular.module('PassSafe').provider('Passwords', function() {
 
   // overwrite this using angular.module('PassSafe').config('PasswordsProvider', ...
@@ -12,8 +22,8 @@ angular.module('PassSafe').provider('Passwords', function() {
     saver = fnk;
   };
 
-  this.$get = ['$q', '$timeout', function($q, $timeout) {
-    // https://keybase.io/triplesec/
+  this.$get = function() {
+    // cryptolib: http://bitwiseshiftleft.github.io/sjcl/
     return {
 
       /**
@@ -27,46 +37,27 @@ angular.module('PassSafe').provider('Passwords', function() {
       /**
        * Load the ciphertext using loader() and decrypt it
        * @param {string} passwd
-       * @return $q
+       * @return {Array}
        */
       load: function(passwd) {
         var ciphertext = loader();
-        var deferred = $q.defer();
 
         if(ciphertext.length > 1) {
-          triplesec.decrypt({
-            data: new triplesec.Buffer(ciphertext, "hex"),
-            key: new triplesec.Buffer(passwd)
-          }, function(err, buff) {
-            if(err) return deferred.reject(err);
-            deferred.resolve(angular.fromJson(buff.toString()));
-          });
-        } else {
-          $timeout(function() {
-            deferred.resolve([]);
-          });
+          return angular.fromJson(sjcl.decrypt(passwd, atob(ciphertext)));
         }
-
-        return deferred.promise;
+        return [];
       },
 
       /**
        * Encrypt the plaintext and push it to saver()
        * @param {string} passwd
-       * @param {json} data
+       * @param {Array} data
        */
       save: function(passwd, data) {
         data = angular.copy(data);
-
-        triplesec.encrypt({
-          data: new triplesec.Buffer(angular.toJson(data)),
-          key: new triplesec.Buffer(passwd)
-        }, function(err, buff) {
-          if(err) throw err;
-          saver(buff.toString('hex'));
-        });
+        saver(btoa(sjcl.encrypt(passwd, angular.toJson(data))));
       }
     };
-  }];
+  };
 
 });
