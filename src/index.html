@@ -156,6 +156,11 @@
 
 		</div>
 
+		<script>
+			if(!(window && window.crypto && window.crypto.getRandomValues)) {
+				jQuery('.container').html('<h1>Sorry, your ugly old Browser has no crypto support.</h1>');
+			}
+		</script>
 
 		<!--(if target dev)><!--><script src="PassSafe.js"></script><!--<!(endif)-->
 		<!--(if target !(dev))><!--><script src="PassSafe.min.js"></script><!--<!(endif)-->

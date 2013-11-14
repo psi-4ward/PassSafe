@@ -88,7 +88,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
 
   grunt.registerTask('default', ['browserify', 'concat:localstorage', 'uglify', 'targethtml:dist']);
-  grunt.registerTask('dev', ['browserify', 'targethtml', 'copy:dist']);
+  grunt.registerTask('dev', ['browserify', 'concat:localstorage', 'targethtml:dev']);
   grunt.registerTask('redmine', 'Build the redmine plugin in plugins/redmine_wiki_passsafe', ['browserify', 'concat:redmine', 'uglify', 'targethtml:dist', 'copy:redmine'])
 
 };
