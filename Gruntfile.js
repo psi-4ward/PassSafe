@@ -26,9 +26,20 @@ module.exports = function(grunt) {
       }
     },
 
+    concat: {
+      localstorage: {
+        src: ['src/PassSafe/app.js', 'src/PassSafe/adapter/localstorage.js'],
+        dest: 'src/PassSafe/app.js'
+      },
+      redmine: {
+        src: ['src/PassSafe/app.js', 'src/PassSafe/adapter/localstorage.js'],
+        dest: 'src/PassSafe/app.js'
+      }
+    },
+
     uglify: {
       options: {
-        banner: '/*! <%= pkg.name %> built on <%= grunt.template.today("dd-mm-yyyy") %> <&= pkg.repository %> */\n'
+        banner: '/*! <%= pkg.name %> built on <%= grunt.template.today("dd-mm-yyyy") %> <%= pkg.repository.url %> */\n'
       },
       dist: {
         files: {
@@ -44,6 +55,22 @@ module.exports = function(grunt) {
         dest: 'dist/adapter/',
         filter: 'isFile',
         expand: true
+      },
+      redmine: {
+        files: [
+          {
+            expand: true,
+            cwd: 'dist',
+            src: 'index.html',
+            dest: 'plugins/redmine_wiki_passsafe/assets/'
+          },
+          {
+            expand: true,
+            cwd: 'dist',
+            src: 'PassSafe.min.js',
+            dest: 'plugins/redmine_wiki_passsafe/assets/'
+          }
+        ]
       }
     },
 
@@ -61,12 +88,14 @@ module.exports = function(grunt) {
   });
 
   grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-browserify');
   grunt.loadNpmTasks('grunt-targethtml');
   grunt.loadNpmTasks('grunt-contrib-watch');
 
-  grunt.registerTask('default', ['browserify', 'uglify', 'targethtml', 'copy']);
-  grunt.registerTask('dev', ['browserify', 'targethtml', 'copy']);
+  grunt.registerTask('default', ['browserify', 'concat:localstorage', 'uglify', 'targethtml:dist', 'copy:dist']);
+  grunt.registerTask('dev', ['browserify', 'targethtml', 'copy:dist']);
+  grunt.registerTask('redmine', 'Build the redmine plugin in plugins/redmine_wiki_passsafe', ['browserify', 'concat:redmine', 'uglify', 'targethtml:dist', 'copy:redmine'])
 
 };

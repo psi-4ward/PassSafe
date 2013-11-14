@@ -2,6 +2,10 @@
   "name": "PassSafe",
   "version": "1.0.0",
   "description": "Browser based password safe",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/psi-4ward/PassSafe"
+  },
   "main": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

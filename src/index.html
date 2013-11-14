@@ -38,9 +38,11 @@
 	<body>
 		<div class="container ng-cloak" ng-controller="PassSafeCtrl" ng-app="PassSafe" id="PassSafe">
 
+			<!--(if target dev)><!-->
 			<div class="" style="margin-top: 15px;">
 				<h1>PassSafe</h1>
 			</div>
+			<!--<!(endif)-->
 
 			<div class="well" ng-show="!decrypted && !createNew" ng-submit="decrypt()" >
 				<form role="form" name="decryptFrm">
@@ -155,13 +157,7 @@
 		</div>
 
 
-		<!--(if target dev)><!-->
-		<script src="PassSafe.js"></script>
-		<!--<!(endif)-->
-		<!--(if target !(dev))><!-->
-		<script src="PassSafe.min.js"></script>
-		<!--<!(endif)-->
-
-		<script src="adapter/localstorage.js"></script>
+		<!--(if target dev)><!--><script src="PassSafe.js"></script><script src="adapter/localstorage.js"></script><!--<!(endif)-->
+		<!--(if target !(dev))><!--><script src="PassSafe.min.js"></script><!--<!(endif)-->
 	</body>
 </html>

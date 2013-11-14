@@ -21,7 +21,7 @@ angular.module('PassSafe').provider('Passwords', function() {
        * @returns {boolean}
        */
       isEmpty: function() {
-        return loader().length>0;
+        return loader().length>1; // we use >1 here, a ciphertext is always much longer and some plugins (redmine) dont work with empty strings
       },
 
       /**
