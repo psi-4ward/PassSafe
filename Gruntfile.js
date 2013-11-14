@@ -28,12 +28,12 @@ module.exports = function(grunt) {
 
     concat: {
       localstorage: {
-        src: ['src/PassSafe/app.js', 'src/PassSafe/adapter/localstorage.js'],
-        dest: 'src/PassSafe/app.js'
+        src: ['dist/PassSafe.js', 'src/PassSafe/adapter/localstorage.js'],
+        dest: 'dist/PassSafe.js'
       },
       redmine: {
-        src: ['src/PassSafe/app.js', 'src/PassSafe/adapter/localstorage.js'],
-        dest: 'src/PassSafe/app.js'
+        src: ['dist/PassSafe.js', 'src/PassSafe/adapter/redmine.js'],
+        dest: 'dist/PassSafe.js'
       }
     },
 
@@ -49,13 +49,6 @@ module.exports = function(grunt) {
     },
 
     copy: {
-      dist: {
-        cwd: 'src/PassSafe/adapter/',
-        src: '*',
-        dest: 'dist/adapter/',
-        filter: 'isFile',
-        expand: true
-      },
       redmine: {
         files: [
           {
@@ -94,7 +87,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-targethtml');
   grunt.loadNpmTasks('grunt-contrib-watch');
 
-  grunt.registerTask('default', ['browserify', 'concat:localstorage', 'uglify', 'targethtml:dist', 'copy:dist']);
+  grunt.registerTask('default', ['browserify', 'concat:localstorage', 'uglify', 'targethtml:dist']);
   grunt.registerTask('dev', ['browserify', 'targethtml', 'copy:dist']);
   grunt.registerTask('redmine', 'Build the redmine plugin in plugins/redmine_wiki_passsafe', ['browserify', 'concat:redmine', 'uglify', 'targethtml:dist', 'copy:redmine'])
 
