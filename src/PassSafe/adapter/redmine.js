@@ -23,12 +23,18 @@ angular.module('PassSafe').config(['PasswordsProvider', function(PasswordsProvid
 
   // ajax POST the new ciphertext and reload the page
   PasswordsProvider.setSaver(function(ciphertext) {
-    var section = jQuery(window.parent.jQuery('div.passsafe').prevAll('.contextual')[0]).find('a').attr('href').match(/section=(\d+)/)[1];
+    var section = '';
+    var body = '';
+    var aEl = jQuery(window.parent.jQuery('div.passsafe').prevAll('.contextual')[0]).find('a');
+    if(aEl.length) {
+      section = aEl.attr('href').match(/section=(\d+)/)[1];
+    }
     var headline = window.parent.jQuery('div.passsafe').prevAll('h1,h2,h3')[0];
-    var headlineText = headline.innerText;
-    headline = headline.tagName.toLowerCase();
+    if(headline) {
+      body += headline.tagName.toLowerCase() + ". " + headline.innerText + "\n\n";
+    }
 
-    var body = headline + ". " + headlineText + "\n\n" + '{{passsafe(' + ciphertext + ')}}';
+    body += '{{passsafe(' + ciphertext + ')}}';
     var token = window.parent.jQuery('meta[name=csrf-token]').attr('content');
 
     $.post(window.parent.document.location.href,
