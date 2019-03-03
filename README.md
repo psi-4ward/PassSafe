@@ -1,6 +1,6 @@
 # Browser based Password Safe
 
-De-/encrypt youre stored passwords inside your browser and transfer only the ciphertext to the server.
+De-/encrypt you're stored passwords inside your browser and transfer only the ciphertext to the server.
 This is nice to embend into existing systems like Wikis.
 
 **Demo** with localStorage adapter: http://embed.plnkr.co/NWioHV83hmlzFpiI6TFg/preview
